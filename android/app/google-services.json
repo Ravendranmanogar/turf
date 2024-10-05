@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633946362014",
+    "project_id": "turf-7440a",
+    "storage_bucket": "turf-7440a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633946362014:android:6c8764bc626240ef7f6b8f",
+        "android_client_info": {
+          "package_name": "com.example.turfff"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2X4HTeMfyX8A7zDZcN1Dzn2tnblmsrPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
