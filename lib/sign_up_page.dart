@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 
-class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+class SignUpPage extends StatelessWidget {
+  final TextEditingController mobileNumberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> loginUser(BuildContext context) async {
+  Future<void> signUpUser(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
-        // Firebase Auth sign-in with email and password
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: usernameController.text.trim(),
+        // Firebase Auth sign-up with email and password
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
-        Navigator.pushNamed(context, '/selectLocation');
+
+        // After successful sign-up, save mobile number to Firestore
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'mobileNumber': mobileNumberController.text.trim(),
+          'email': emailController.text.trim(),
+          'dateJoined': DateTime.now(), // Optional: to track when the user joined
+        });
+
+        // Navigate to the home or main page after signing up
+        Navigator.pushNamed(context, '/');
+
       } catch (e) {
         // Display error message in case of failure
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Please enter your valid email and password"),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
         ));
       }
     }
@@ -31,7 +43,7 @@ class LoginPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/image.jpg'), // Background image for Login Page
+            image: AssetImage('assets/image.jpg'), // Background image for Sign Up Page
             fit: BoxFit.cover,
           ),
         ),
@@ -54,18 +66,34 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Login to Turf', style: TextStyle(fontSize: 24)),
+                  const Text('Sign Up', style: TextStyle(fontSize: 24)),
                   const SizedBox(height: 20),
                   TextFormField(
-                    controller: usernameController,
-                    decoration: const InputDecoration(labelText: 'Email'),
+                    controller: mobileNumberController,
+                    decoration: const InputDecoration(labelText: 'Mobile Number'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Please enter your mobile number';
+                      } else if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
+                        return 'Please enter a valid mobile number';
                       }
                       return null;
                     },
                   ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: passwordController,
                     obscureText: true,
@@ -73,6 +101,8 @@ class LoginPage extends StatelessWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
+                      } else if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
                       }
                       return null;
                     },
@@ -80,15 +110,16 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      loginUser(context);
+                      signUpUser(context);
                     },
-                    child: const Text('Login'),
+                    child: const Text('Sign Up'),
                   ),
+                  const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signUp');
+                      Navigator.pop(context); // Navigate back to the login page
                     },
-                    child: const Text('Don\'t have an account? Sign Up'),
+                    child: const Text('Already have an account? Login'),
                   ),
                 ],
               ),
@@ -99,3 +130,4 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+//

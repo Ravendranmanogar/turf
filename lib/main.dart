@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:turfff/confirmation.dart';
 import 'package:turfff/location.dart';
 import 'package:turfff/login_page.dart';
+import 'package:turfff/sign_up_page.dart';
 import 'package:turfff/slot.dart';
 import 'package:turfff/turf_option.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),
+        '/signUp': (context) => SignUpPage(),
         '/selectLocation': (context) => SelectLocationPage(),
         '/turfOptions': (context) => TurfOptionsPage(),
         '/slotSelection': (context) => SlotSelectionPage(),
