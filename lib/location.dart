@@ -13,7 +13,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
         image: DecorationImage(
         image: AssetImage('assets/image.jpg'), // Background image for Login Page
     fit: BoxFit.cover,
@@ -21,7 +21,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     ),
     child: Center(
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
@@ -36,11 +36,11 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Select Your Location', style: TextStyle(fontSize: 24)),
-              SizedBox(height: 20),
+              const Text('Select Your Location', style: TextStyle(fontSize: 24)),
+              const SizedBox(height: 20),
               DropdownButton<String>(
                 isExpanded: true,
-                hint: Text('Select Location'),
+                hint: const Text('Select Location'),
                 value: selectedLocation,
                 items: ['Villupuram',].map((String location) {//'Pondicherry', 'Villupuram'
                   return DropdownMenuItem<String>(
@@ -54,7 +54,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                   });
                 },
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: selectedLocation != null
                     ? () {
@@ -66,7 +66,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                   );
                 }
                     : null,
-                child: Text('Continue'),
+                child: const Text('Continue'),
               ),
             ],
           ),

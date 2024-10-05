@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
     ),
     child: Center(
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
@@ -32,23 +32,23 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Login to Turf', style: TextStyle(fontSize: 24)),
-              SizedBox(height: 20),
+              const Text('Login to Turf', style: TextStyle(fontSize: 24)),
+              const SizedBox(height: 20),
               TextField(
                 controller: usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
               ),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/selectLocation');
                 },
-                child: Text('Login'),
+                child: const Text('Login'),
               ),
             ],
           ),
