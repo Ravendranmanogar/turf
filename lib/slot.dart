@@ -32,14 +32,33 @@ class _SlotSelectionPageState extends State<SlotSelectionPage> {
     // Replace '.' and '@' in email with '_' for Firestore compatibility
     String safeEmail = userEmail.replaceAll('.', '.').replaceAll('@', '@');
 
-    await FirebaseFirestore.instance.collection('bookings').doc(safeEmail).set({
-      'timing': selectedTiming,
-      'session': selectedSession,
-      'location': selectedLocation,  // Save selected location
-      'turf': selectedTurf,          // Save selected turf
-      'date': DateTime.now(),
-      'mobileNumber': mobileNumber,  // Save fetched mobile number
-    });
+    // Check if the slot is already booked
+    QuerySnapshot existingBooking = await FirebaseFirestore.instance
+        .collection('bookings')
+        .where('timing', isEqualTo: selectedTiming)
+        .where('session', isEqualTo: selectedSession)
+        .where('location', isEqualTo: selectedLocation)
+        .where('turf', isEqualTo: selectedTurf)
+        .get();
+
+    if (existingBooking.docs.isNotEmpty) {
+      // Slot is already booked
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('This slot is already booked. Please choose another one.'),
+      ));
+    } else {
+      // No existing booking, save new booking
+      await FirebaseFirestore.instance.collection('bookings').doc(safeEmail).set({
+        'timing': selectedTiming,
+        'session': selectedSession,
+        'location': selectedLocation,  // Save selected location
+        'turf': selectedTurf,          // Save selected turf
+        'date': DateTime.now(),
+        'mobileNumber': mobileNumber,  // Save fetched mobile number
+      });
+      // Navigate to confirmation page
+      Navigator.pushNamed(context, '/confirmation');
+    }
   }
 
   @override
@@ -131,7 +150,6 @@ class _SlotSelectionPageState extends State<SlotSelectionPage> {
                         User? user = FirebaseAuth.instance.currentUser;
                         String userEmail = user?.email ?? 'No Email';  // Get the user's email
                         saveBookingData(selectedLocation, selectedTurf, userEmail);  // Save booking with email and mobile number
-                        Navigator.pushNamed(context, '/confirmation');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Loading user details. Please wait.'),
